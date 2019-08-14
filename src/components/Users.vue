@@ -63,12 +63,15 @@
                 })
             },
             add() {
-
+                
             },
             delete(id) {
                 
             },
             edit(id) {
+                
+            },
+            view(id) {
 
             }
         },
