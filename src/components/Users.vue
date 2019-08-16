@@ -137,7 +137,7 @@
             async edit(user) {
                 this.submitting = true
                 try {
-                    const res = await axios.put(config.users_url + '/' + user.id, {name: user.name, job: user.job})
+                    const res = await axios.put(config.users_url + '/' + user.id)
                     const editIndex = this.users.findIndex(u => u.id === user.id)
                     this.users[editIndex] = user
                     this.submitting = false
