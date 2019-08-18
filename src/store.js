@@ -28,11 +28,10 @@ export default new Vuex.Store({
     },
 
     actions: {
-        fetchAll({state, commit}) {
-            axios.get(`${state.baseUrl}`)
+        fetchAll({state, commit}, page) {
+            axios.get(`${state.baseUrl}?page=${page}`)
                 .then(res => {
                     commit('setData', res.data)
-                    console.log(state.data)
                 })
         },
     }

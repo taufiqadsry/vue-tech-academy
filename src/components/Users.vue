@@ -12,14 +12,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="dt in users" :key="dt.index">
+                <tr v-for="dt in users.data" :key="dt.index">
                     <th scope="row">{{ dt.id }}</th>
                     <td><img :src="dt.avatar"/></td>
                     <td>{{dt.email}}</td>
                     <td>{{dt.first_name + " " +dt.last_name}}</td>
                     <td>
-                        <edit-dialog action="View"></edit-dialog>
-                        <edit-dialog action="Edit"></edit-dialog>
+                        <edit-dialog action="View" v-on:showEditDialog="showEditDialog(dt)" v-on:closeEditDialog="closeEditDialog"></edit-dialog>
+                        <edit-dialog action="Edit" v-on:showEditDialog="showEditDialog(dt)" v-on:closeEditDialog="closeEditDialog"></edit-dialog>
                         <button type="button" class="btn btn-danger">Delete</button>
                     </td>
                 </tr>
@@ -27,79 +27,73 @@
         </table>
         <nav aria-label="Page navigation example">
             <ul class="pagination">
-                <!-- <li class="page-item"><a class="page-link" href="#">Previous</a></li> -->
-                <li class="page-item active"><a class="page-link" href="#" @click="fetchUsers()">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <!-- <li class="page-item"><a class="page-link" href="#">Next</a></li> -->
+                <li 
+                    v-for="page in users.total_pages" 
+                    :key="`${page}`" 
+                    :class="currentPage == page ? 'page-item active' : 'page-item'"
+                >
+                    <button class="page-link" @click="fetchUsers(page)">{{ page }}</button>
+                </li>
             </ul>
         </nav>
     </div>
 </template>
 
 <style>
-    tbody a { padding: 5px;}
+    tbody a { padding: 5px }
 </style>
 
 <script>
-    import { mapState } from 'vuex';
-    // import axios from 'axios'
-    // import config from "./../config"
+    import { mapState, mapMutations } from 'vuex';
     import editDialog from './Dialog'
 
     export default {
         name: 'Users',
+
         components: {
             editDialog
         },
+
         props: {
             title: {
                 type: String,
                 default: ""
             }
         },
-        // data() {
-        //     return {
-        //         users: []
-        //     }
-        // },
+
+        data() {
+            return {
+                currentPage: null
+            }
+        },
         
         computed: {
-            // users() {
-            //     return this.$store.getters.getData
-            // },
             ...mapState({
                 users: 'data'
             })
         },
         
         methods: {
-            fetchUsers() {
-                this.$store.dispatch('fetchAll')
-            },
-            // load() {
-            //     axios.get(config.users_url).then(res => {
-            //         this.users = res.data 
-            //     }).catch ((err) => {
-            //         console.log(err);
-            //     })
-            // },
-            // add() {              
-            // },
-            // delete(id) {
-                
-            // },
-            // edit(id) {
-                
-            // },
-            // view(id) {
+            ...mapMutations({
+                setActiveUser: 'setActive'
+            }),
 
-            // }
+            fetchUsers(page) {
+                this.$store.dispatch('fetchAll', page)
+                this.currentPage = page
+            },
+
+            showEditDialog(user) {
+                this.setActiveUser(user)
+            },
+
+            closeEditDialog() {
+                this.setActiveUser({})
+            }
         },
 
         mounted() {
-            this.fetchUsers()
-            console.log(this.users)
+            this.fetchUsers(1)
         },
     }
 </script>
