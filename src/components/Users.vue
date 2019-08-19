@@ -134,9 +134,9 @@
                         console.log(error)
                     })
             },
-            edit(id) {
+            edit(index) {
                 axios
-                    .put(config.users_url + '/' + id)
+                    .put(config.users_url + '/' + this.users.data[index].id)
                     .then(res => {
 
                     })
