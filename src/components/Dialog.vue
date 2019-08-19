@@ -1,59 +1,86 @@
 <template>
   <div>
-    <!-- TOGGLER -->
-    <button 
-      type="button" 
-      :class="action === 'Edit' ? 'btn btn-success' : 'btn btn-primary'" 
-      data-toggle="modal" 
-      data-target="#exampleModal"
-      @click="showEditDialog"
-    >
-        {{ action }}
-    </button>
-    <!-- MODAL -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel" v-text="action == 'View' ? 'User Detail' : 'Edit User Data'"></h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-              <div class="modal-body text-left bg-light">
-                  <form>
-                    <div class="form-row">
-                      <div class="form-group col-md-6">
-                        <label for="inputFirstName">First Name</label>
-                        <input type="text" class="form-control" id="inputFirstName" v-model="userActive.first_name">
-                      </div>
-                      <div class="form-group col-md-6">
-                        <label for="inputLastName">Last Name</label>
-                        <input type="text" class="form-control" id="inputLastName" v-model="userActive.last_name">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="inputEmail4">Email</label>
-                      <input type="email" class="form-control" id="inputEmail4" v-model="userActive.email">
-                    </div>
-                  </form>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="closeEditDialog">Close</button>
-                  <button type="button" class="btn btn-primary" v-show="action == 'Edit'">Save</button>
-              </div>
-          </div>
+    <b-button v-b-modal.modal-center class="btn" variant="primary">
+      Add New User
+    </b-button>
+    <b-modal id="modal-center" v-model="dialog" centered :title="action.concat(' User Data')" no-close-on-esc no-close-on-backdrop hide-header-close>
+      <b-container class="text-left">
+        <b-img :src="userActive.avatar" fluid v-show="userActive.id"></b-img>
+        <b-form :class="userActive.id ? 'mt-4' : ''">
+          <b-form-group
+            id="input-group-1"
+            label="Email address:"
+            label-for="input-1"
+          >
+            <b-form-input
+              id="input-1"
+              v-model="userActive.email"
+              type="email"
+              :disabled="action == 'View'"
+              required
+              placeholder="Enter email"
+            ></b-form-input>
+          </b-form-group>
+
+          <b-form-group id="input-group-2" label="First Name" label-for="input-2">
+            <b-form-input
+              id="input-2"
+              v-model="userActive.first_name"
+              required
+              :disabled="action == 'View'"
+              placeholder="Enter first name"
+            ></b-form-input>
+          </b-form-group>
+
+          <b-form-group id="input-group-3" label="Last Name" label-for="input-3">
+            <b-form-input
+              id="input-3"
+              v-model="userActive.last_name"
+              :disabled="action == 'View'"
+              required
+              placeholder="Enter last name"
+            ></b-form-input>
+          </b-form-group>
+
+          <!-- <b-button type="submit" variant="primary">Submit</b-button>
+          <b-button type="reset" variant="danger">Reset</b-button> -->
+        </b-form>
+      </b-container>
+      <div slot="modal-footer" class="w-100">
+        <div class="float-right">
+          <b-button
+            variant="secondary"
+            class="mr-1"
+            @click="close"
+          >
+            Close
+          </b-button>
+          <b-button
+            variant="success"
+            v-show="action != 'View'"
+            @click="save"
+          >
+            Save
+          </b-button>
+        </div>
       </div>
-    </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
+/* eslint-disable */
 import { mapState } from 'vuex'
 
 export default {
   props: {
     action: String
+  },
+
+  data() {
+    return {
+      dialog: false
+    }
   },
 
   computed: {
@@ -63,12 +90,21 @@ export default {
   },
 
   methods: {
-    showEditDialog() {
-      this.$emit('showEditDialog')
+    close() {
+      this.dialog = false
+      this.$emit('closeEditDialog')
     },
 
-    closeEditDialog() {
-      this.$emit('closeEditDialog')
+    save() {
+      console.log('save')
+    }
+  },
+
+  watch: {
+    userActive() {
+      if (this.userActive.id) {
+        this.dialog = true
+      }
     }
   }
 }
