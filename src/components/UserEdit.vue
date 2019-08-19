@@ -11,6 +11,8 @@
 
 <script>
 export default {
+    name: 'user-edit',
+    
     props: {
         user: {
             type: Object,

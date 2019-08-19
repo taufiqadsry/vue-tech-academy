@@ -23,6 +23,7 @@
 
 <script>
 export default {
+    name: 'user-view',
     props: {
         user: {
             type: Object,

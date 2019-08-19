@@ -10,6 +10,7 @@
 
 <script>
 export default {
+    name: 'modal-dialog',
     props: {
         open: {
             type: Boolean,
