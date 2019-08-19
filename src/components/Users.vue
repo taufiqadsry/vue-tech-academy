@@ -48,8 +48,6 @@
 
 <script>
 
-    import axios from 'axios'
-    import config from "./../config";
     import UserForm from './UserForm'
     import UserEdit from './UserEdit'
     import DialogModal from './Dialog'
