@@ -38,6 +38,9 @@
         </ul>
       </b-nav>
     </div>
+    <div class="row">
+      <span class="text-danger">*Add, Edit, and Delete incomplete</span>
+    </div>
   </div>
 </template>
 
