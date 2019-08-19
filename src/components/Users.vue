@@ -5,7 +5,7 @@
             <b-form inline @submit="add" @keypress.enter="add" class="form">
                 <b-form-input type="text" v-model="name" placeholder="name"/>
                 <b-form-input type="text" v-model="job" placeholder="job"/>
-                <b-button variant="primary">Add</b-button>
+                <b-button variant="primary" @click="add">Add</b-button>
             </b-form>
         </div>
 
@@ -23,7 +23,6 @@
             <tr v-for="(dt, key) in users.data">
                 <th scope="row">
                     {{ key }}
-
                 </th>
                 <td><img :src="dt.avatar" class="ava"/></td>
                 <td>{{dt.email}}</td>
@@ -31,12 +30,12 @@
                 <td>
                     <b-button variant="danger" @click="hapus(key)">Delete</b-button>
                     <b-button variant="info" v-b-modal.xxx @click="editModal=true">Edit</b-button>
-                    <b-button variant="success" v-b-modal.modal-1 @click="viewModal=true">View</b-button>
+                    <b-button variant="success" v-b-modal.modal-1 @click="view(key)">View</b-button>
                 </td>
             </tr>
             </tbody>
         </table>
-        <ViewList v-if="viewModal"></ViewList>
+        <ViewList v-if="viewModal" :user="viewUser"></ViewList>
         <EditForm v-if="editModal"></EditForm>
     </div>
 </template>
@@ -93,6 +92,7 @@
                 job: '',
                 editModal: false,
                 viewModal: false,
+                viewUser: {}
             }
         },
         created() {
@@ -144,8 +144,16 @@
                         console.log(error)
                     })
             },
-            view(id) {
-
+            view(index) {
+                axios
+                    .get(config.users_url + '/' + this.users.data[index].id)
+                    .then(res => {
+                        this.viewModal = true
+                        this.viewUser = this.users.data[index]
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
             }
         },
     }

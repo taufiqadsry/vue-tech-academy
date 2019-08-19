@@ -1,14 +1,21 @@
 <template>
     <div>
         <b-modal id="modal-1" title="View User">
-            <p class="my-4">IKI VIEW USER</p>
+            <p>{{user.email}}</p>
+            <p>{{user.first_name}}</p>
+            <p>{{user.last_name}}</p>
         </b-modal>
     </div>
 </template>
 
 <script>
     export default {
-        name: "ViewList"
+        name: "ViewList",
+        props: {
+            user: {
+                type: Object,
+            }
+        }
     }
 </script>
 
