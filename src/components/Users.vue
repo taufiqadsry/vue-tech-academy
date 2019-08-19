@@ -2,11 +2,11 @@
     <div class="row">
         <div>
             <h2> {{ title }} </h2>
-            <form @submit="add" @keypress.enter="add" class="form">
-                <input type="text" v-model="name" placeholder="name">
-                <input type="text" v-model="job" placeholder="job">
-                <button>Add</button>
-            </form>
+            <b-form inline @submit="add" @keypress.enter="add" class="form">
+                <b-form-input type="text" v-model="name" placeholder="name"/>
+                <b-form-input type="text" v-model="job" placeholder="job"/>
+                <b-button variant="primary">Add</b-button>
+            </b-form>
         </div>
 
         <table class="table">
@@ -29,13 +29,15 @@
                 <td>{{dt.email}}</td>
                 <td>{{dt.first_name + " " +dt.last_name}}</td>
                 <td>
-                    <a href="#" @click="hapus(key)" >delete</a>
-                    <a href="#">edit</a>
-                    <a href="#">view</a>
+                    <b-button variant="danger" @click="hapus(key)">Delete</b-button>
+                    <b-button variant="info" v-b-modal.xxx @click="editModal=true">Edit</b-button>
+                    <b-button variant="success" v-b-modal.modal-1 @click="viewModal=true">View</b-button>
                 </td>
             </tr>
             </tbody>
         </table>
+        <ViewList v-if="viewModal"></ViewList>
+        <EditForm v-if="editModal"></EditForm>
     </div>
 </template>
 
@@ -67,11 +69,17 @@
 
 <script>
 
-    import axios from 'axios'
+    import axios from 'axios';
     import config from "./../config";
+    import EditForm from "./EditForm";
+    import ViewList from "./ViewList";
 
     export default {
         name: 'Users',
+        components: {
+            EditForm,
+            ViewList
+        },
         props: {
             title: {
                 type: String,
@@ -82,7 +90,9 @@
             return {
                 users: [],
                 name: '',
-                job: ''
+                job: '',
+                editModal: false,
+                viewModal: false,
             }
         },
         created() {
@@ -115,7 +125,7 @@
             },
             hapus(index) {
                 axios
-                    .delete(config.users_url+ '/' + this.users.data[index].id)
+                    .delete(config.users_url + '/' + this.users.data[index].id)
                     .then(res => {
                         this.users.data.splice(index, 1)
                         console.log(this.users.data)
@@ -125,7 +135,14 @@
                     })
             },
             edit(id) {
+                axios
+                    .put(config.users_url + '/' + id)
+                    .then(res => {
 
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
             },
             view(id) {
 
